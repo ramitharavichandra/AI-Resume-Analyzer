@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
 from app.api.v1.health import router as health_router
 from app.api.v1.parser import router as parser_router
+from app.api.v1.skills import router as skills_router
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -24,6 +25,7 @@ app.add_middleware(
 # Include Router Modules
 app.include_router(health_router, prefix=settings.API_V1_STR, tags=["Health"])
 app.include_router(parser_router, prefix=settings.API_V1_STR, tags=["Resume Parser"])
+app.include_router(skills_router, prefix=settings.API_V1_STR, tags=["Skill Analytics"])
 
 
 @app.get("/")

@@ -4,7 +4,6 @@ from pypdf import PdfWriter
 from app.main import app
 from app.services.text_cleaner import TextCleanerService
 from app.services.section_extractor import SectionExtractorService
-
 client = TestClient(app)
 
 

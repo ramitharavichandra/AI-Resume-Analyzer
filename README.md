@@ -1,102 +1,129 @@
-# AI Resume Analyzer
+# AI Resume Analyzer 🚀
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Python](https://img.shields.io/badge/python-3.10%2B-blue)
+![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.110%2B-green)
-![React](https://img.shields.io/badge/React-18%2B-blue)
+![React](https://img.shields.io/badge/React-19-blue)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5%2B-blue)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4-38bdf8)
 
-An production-grade AI-powered Resume Analyzer that parses resumes (PDF format), extracts key skills, calculates ATS compatibility scores against Job Descriptions using Natural Language Processing (NLP), Sentence Embeddings, and Cosine Similarity, and provides actionable resume improvement suggestions.
-
----
-
-## 🎯 Problem Statement
-Job applicants often face high rejection rates due to Automated Applicant Tracking Systems (ATS) filtering out resumes before a human recruiter ever sees them. Candidates lack objective, data-driven feedback on how well their resumes match target Job Descriptions (JDs) and what specific skills or key phrases are missing.
-
-## 🚀 Proposed Solution
-The **AI Resume Analyzer** provides an instant, privacy-aware breakdown of any uploaded PDF resume:
-1. **Automated Document Parsing & Text Extraction**: Robust PDF text parsing preserving context and structural sections.
-2. **Skill & Keyword Extraction**: NLP-based named entity and keyword recognition to identify tech stacks, domain skills, and experience keywords.
-3. **Vector Similarity & ATS Scoring**: Hybrid scoring combining TF-IDF lexical matching and Sentence Transformer semantic embeddings with Cosine Similarity.
-4. **Missing Skill & Gap Analysis**: Comparative set analysis highlighting critical missing skills and keyword deficiencies relative to job descriptions.
-5. **Actionable Improvement Recommendations**: Rule-based & LLM-assisted feedback report downloadable as PDF.
+A production-grade, full-stack AI system that parses candidate resumes (PDF format), extracts skill taxonomies, calculates ATS compatibility scores using **TF-IDF Vectorization** and **Vector Cosine Similarity**, and generates actionable resume improvement recommendations.
 
 ---
 
-## 🏗️ Architecture & High-Level System Design
+## 🌟 Key Features
+
+- **📄 PDF Text Extraction & Cleaning Engine**: In-memory binary PDF parsing via `PyPDF` with text normalization, bullet stripping, and metric auditing.
+- **🏷️ Section Segmentation Pipeline**: Heuristic regex engine partitioning resumes into `summary`, `skills`, `experience`, `projects`, `education`, and `certifications`.
+- **🎯 Skill Taxonomy & Gap Analytics**: 6-domain tech stack taxonomy using set algebra (`intersection`, `difference`) for keyword gap analysis.
+- **🧮 Hybrid ATS Scoring Algorithm**: Multi-factor weighted score combining:
+  - Skill Match Score (45% weight)
+  - Vector Cosine Similarity Score (35% weight)
+  - Structural Section Score (20% weight)
+- **💡 Actionable Feedback Generator**: Automated recommendations identifying missing skills, structural section gaps, and terminology misalignments.
+- **🎨 Glassmorphism React SPA**: Built with Vite, React 19, TypeScript, and Tailwind CSS v4 featuring an animated SVG score ring and downloadable PDF report export.
+
+---
+
+## 🏗️ System Architecture
 
 ```
-+-------------------+        HTTP POST /api/v1/analyze        +--------------------+
-|                   |  ------------------------------------->  |                    |
-|  React + TS Frontend |                                        |  FastAPI Backend   |
-|  (Shadcn UI, UI)  |  <-------------------------------------  |  (Python 3.10+)    |
-+-------------------+         JSON Analysis Payload           +---------+----------+
-                                                                        |
-                                                                        v
-                                                              +--------------------+
-                                                              |  NLP Engine        |
-                                                              |  - PDF Parser      |
-                                                              |  - TF-IDF Vectorizer|
-                                                              |  - SBERT Embeddings|
-                                                              |  - Similarity Calc |
-                                                              +--------------------+
++--------------------------+        HTTP POST /api/v1/match-resume        +-------------------------+
+|                          |  ----------------------------------------->  |                         |
+|  React 19 + TypeScript   |                                              |  FastAPI Backend        |
+|  Tailwind CSS v4 Client  |  <-----------------------------------------  |  (Python 3.10+)         |
++--------------------------+          JSON ATS Analysis Payload           +------------+------------+
+                                                                                       |
+                                                                                       v
+                                                                          +-------------------------+
+                                                                          |  NLP Engine Services    |
+                                                                          |  - PyPDF Parser         |
+                                                                          |  - Section Segmenter    |
+                                                                          |  - Skill Taxonomy       |
+                                                                          |  - TF-IDF Vectorizer    |
+                                                                          |  - Cosine Similarity    |
+                                                                          +-------------------------+
 ```
 
 ---
 
-## 📂 Project Structure
+## 🔌 API Documentation
+
+| Method | Endpoint | Description | Request Payload | Response |
+| :--- | :--- | :--- | :--- | :--- |
+| **GET** | `/api/v1/health` | Health Check | None | `{"status": "healthy", "version": "1.0.0"}` |
+| **POST** | `/api/v1/parse-resume` | Upload & Segment PDF | `file: UploadFile` (.pdf) | Extracted text, section map & page stats |
+| **POST** | `/api/v1/extract-skills` | Categorized Skill Extraction | `{"text": "..."}` | Flat & categorized skills dictionary |
+| **POST** | `/api/v1/analyze-skill-gap` | Skill Match Gap Analytics | `{"resume_text": "...", "job_description_text": "..."}` | `match_percentage`, `matched_skills`, `missing_skills` |
+| **POST** | `/api/v1/match-resume` | Hybrid ATS Score & Recommendations | `{"resume_text": "...", "job_description_text": "..."}` | `ats_score`, `rating`, metric scores, suggestions |
+
+---
+
+## 📂 Project Monorepo Structure
 
 ```
 AI-Resume-Analyzer/
 ├── backend/
 │   ├── app/
-│   │   ├── api/             # API routes (v1 endpoints)
-│   │   ├── core/            # Core logic, security, & config
-│   │   ├── services/        # Business logic & NLP pipeline
-│   │   ├── models/          # Pydantic schemas & response models
-│   │   └── main.py          # FastAPI application entrypoint
-│   ├── tests/               # Unit & integration tests
-│   ├── requirements.txt     # Python dependencies
-│   └── .env.example         # Environment variables template
-├── frontend/                # React TypeScript Web Application
-├── README.md                # Project documentation
+│   │   ├── api/v1/             # FastAPI Endpoint Routers
+│   │   ├── models/             # Pydantic Request/Response Schemas
+│   │   ├── services/           # PDF Parser, Skill Taxonomy, TF-IDF & ATS Engine
+│   │   ├── config.py           # Pydantic v2 Settings Manager
+│   │   └── main.py             # FastAPI App Entrypoint
+│   ├── tests/                  # Pytest Automated Test Suite (13 passing tests)
+│   └── requirements.txt        # Python Dependencies
+├── frontend/
+│   ├── src/
+│   │   ├── components/         # Glassmorphism React UI Components
+│   │   ├── services/           # Typed API Service Client
+│   │   ├── index.css           # Tailwind v4 Design System & Glass Utility
+│   │   └── App.tsx             # Root Application Flow
+│   └── package.json            # Node.js Dependencies
+├── README.md                   # Project Documentation
 └── .gitignore
 ```
 
 ---
 
-## 🛠️ Tech Stack
-
-- **Backend**: Python 3.10+, FastAPI, Uvicorn, Pydantic v2
-- **NLP & AI**: PyPDF, Scikit-Learn (TF-IDF, Cosine Similarity), Sentence-Transformers, NLTK/spaCy
-- **Frontend**: React 18, TypeScript, Tailwind CSS, Vite
-- **Testing**: Pytest, HTTPX
-
----
-
 ## ⚙️ Quick Start & Installation
 
-### Backend Setup
-1. Navigate to `backend`:
-   ```bash
-   cd backend
-   ```
-2. Create and activate a virtual environment:
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
-3. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-4. Run the FastAPI development server:
-   ```bash
-   uvicorn app.main:app --reload --port 8000
-   ```
-5. Access interactive API documentation at `http://localhost:8000/docs`.
+### 1. Backend Setup (FastAPI)
+
+```bash
+cd backend
+
+# Create & activate virtual environment
+python3 -m venv venv
+source venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run automated tests
+PYTHONPATH=. pytest
+
+# Start development server
+uvicorn app.main:app --reload --port 8000
+```
+
+Interactive API Swagger documentation is available at `http://localhost:8000/docs`.
+
+### 2. Frontend Setup (React + Vite)
+
+```bash
+cd frontend
+
+# Install dependencies
+npm install
+
+# Start Vite dev server
+npm run dev
+```
+
+Open `http://localhost:5173` in your browser.
 
 ---
 
 ## 📄 License
+
 MIT License. Created for Placement Portfolio Development.

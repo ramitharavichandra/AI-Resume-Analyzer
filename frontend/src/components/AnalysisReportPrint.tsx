@@ -1,5 +1,5 @@
 import React from 'react';
-import { ResumeMatchResponse, ParseResumeResponse } from '../services/api';
+import type { ResumeMatchResponse, ParseResumeResponse } from '../services/api';
 
 interface Props {
   matchData: ResumeMatchResponse;

@@ -4,7 +4,7 @@ import ScoreBreakdown from './ScoreBreakdown';
 import SkillChips from './SkillChips';
 import SuggestionsList from './SuggestionsList';
 import AnalysisReportPrint from './AnalysisReportPrint';
-import { ResumeMatchResponse, ParseResumeResponse } from '../services/api';
+import type { ResumeMatchResponse, ParseResumeResponse } from '../services/api';
 
 interface Props {
   matchData: ResumeMatchResponse;

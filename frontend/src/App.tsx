@@ -5,7 +5,7 @@ import FeaturesSection from './components/FeaturesSection';
 import ResumeUploader from './components/ResumeUploader';
 import AnalyzerDashboard from './components/AnalyzerDashboard';
 import Footer from './components/Footer';
-import { parsePdfResume, matchResume, ParseResumeResponse, ResumeMatchResponse } from './services/api';
+import { parsePdfResume, matchResume, type ParseResumeResponse, type ResumeMatchResponse } from './services/api';
 import './index.css';
 
 function App() {

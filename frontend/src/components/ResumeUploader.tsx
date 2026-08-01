@@ -15,10 +15,12 @@ const ResumeUploader: React.FC<Props> = ({ onAnalyze, isLoading, error }) => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const selected = e.target.files[0];
-      if (selected.type === 'application/pdf' || selected.name.endsWith('.pdf')) {
+      const isPdf = selected.type === 'application/pdf' || selected.name.endsWith('.pdf');
+      const isDocx = selected.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || selected.name.endsWith('.docx');
+      if (isPdf || isDocx) {
         setFile(selected);
       } else {
-        alert('Please upload a valid PDF document (.pdf).');
+        alert('Please upload a valid PDF (.pdf) or Word (.docx) document.');
       }
     }
   };
@@ -37,10 +39,12 @@ const ResumeUploader: React.FC<Props> = ({ onAnalyze, isLoading, error }) => {
     setIsDragOver(false);
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       const dropped = e.dataTransfer.files[0];
-      if (dropped.type === 'application/pdf' || dropped.name.endsWith('.pdf')) {
+      const isPdf = dropped.type === 'application/pdf' || dropped.name.endsWith('.pdf');
+      const isDocx = dropped.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || dropped.name.endsWith('.docx');
+      if (isPdf || isDocx) {
         setFile(dropped);
       } else {
-        alert('Please upload a valid PDF document (.pdf).');
+        alert('Please upload a valid PDF (.pdf) or Word (.docx) document.');
       }
     }
   };
@@ -48,7 +52,7 @@ const ResumeUploader: React.FC<Props> = ({ onAnalyze, isLoading, error }) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!file) {
-      alert('Please select or drop a PDF resume file.');
+      alert('Please select or drop a PDF or DOCX resume file.');
       return;
     }
     if (!jobDescription.trim()) {
@@ -88,7 +92,7 @@ const ResumeUploader: React.FC<Props> = ({ onAnalyze, isLoading, error }) => {
             {/* Drag & Drop File Upload */}
             <div>
               <label className="block text-sm font-semibold text-slate-300 mb-3 flex items-center justify-between">
-                <span>1. Upload Resume (PDF)</span>
+                <span>1. Upload Resume (PDF / DOCX)</span>
                 {file && <span className="text-xs text-brand-300 font-normal">{(file.size / 1024).toFixed(1)} KB</span>}
               </label>
 
@@ -108,7 +112,7 @@ const ResumeUploader: React.FC<Props> = ({ onAnalyze, isLoading, error }) => {
                 <input
                   ref={fileInputRef}
                   type="file"
-                  accept=".pdf,application/pdf"
+                  accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                   onChange={handleFileChange}
                   className="hidden"
                 />
@@ -121,7 +125,7 @@ const ResumeUploader: React.FC<Props> = ({ onAnalyze, isLoading, error }) => {
                       </svg>
                     </div>
                     <p className="text-white font-medium text-sm max-w-[200px] truncate mb-1">{file.name}</p>
-                    <p className="text-xs text-emerald-400">PDF Loaded • Click to change</p>
+                    <p className="text-xs text-emerald-400">Document Loaded • Click to change</p>
                   </div>
                 ) : (
                   <div className="flex flex-col items-center">
@@ -131,7 +135,7 @@ const ResumeUploader: React.FC<Props> = ({ onAnalyze, isLoading, error }) => {
                       </svg>
                     </div>
                     <p className="text-slate-200 font-medium text-sm mb-1">
-                      Drag & Drop your resume PDF here
+                      Drag & Drop your resume PDF or DOCX here
                     </p>
                     <p className="text-slate-500 text-xs">or click to browse from device</p>
                   </div>

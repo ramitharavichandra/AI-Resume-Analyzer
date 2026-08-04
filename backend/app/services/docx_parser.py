@@ -26,6 +26,14 @@ class DocxParserService:
                 detail="Uploaded file is empty.",
             )
 
+        # Check magic bytes for OLE compound files (encrypted DOCX or older .doc files)
+        if file_bytes.startswith(b"\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1"):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Unsupported document format. The file is either password-protected, encrypted, or in an older Word 97-2003 (.doc) format.",
+            )
+
+
         try:
             docx_file_stream = io.BytesIO(file_bytes)
             with zipfile.ZipFile(docx_file_stream) as docx:

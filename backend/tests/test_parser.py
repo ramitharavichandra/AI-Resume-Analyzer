@@ -128,3 +128,15 @@ Built platforms.
     assert "Senior Software Engineer" in data["raw_text"]
     assert "Python, PyTest" in data["sections"]["skills"]
 
+
+def test_parse_resume_docx_encrypted():
+    # Create dummy bytes starting with OLE magic signature
+    encrypted_docx_data = b"\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1" + b"dummy encrypted content"
+    response = client.post(
+        "/api/v1/parse-resume",
+        files={"file": ("encrypted.docx", encrypted_docx_data, "application/vnd.openxmlformats-officedocument.wordprocessingml.document")},
+    )
+    assert response.status_code == 400
+    assert "password-protected, encrypted, or in an older Word 97-2003 (.doc) format" in response.json()["detail"]
+
+

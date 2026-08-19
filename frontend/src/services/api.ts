@@ -27,6 +27,7 @@ export interface ParseResumeResponse {
   raw_text: string;
   sections: ParsedSections;
   statistics: TextStatistics;
+  engine: string;
 }
 
 export interface ResumeMatchResponse {
@@ -42,6 +43,7 @@ export interface ResumeMatchResponse {
   present_sections: string[];
   missing_sections: string[];
   improvement_suggestions: string[];
+  engine: string;
 }
 
 // ── API Client ───────────────────────────────────────────────────────────────

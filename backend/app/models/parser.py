@@ -24,3 +24,4 @@ class ParseResumeResponse(BaseModel):
     raw_text: str = Field(..., description="Cleaned raw text extracted from PDF")
     sections: ParsedSections = Field(..., description="Segmented resume sections")
     statistics: TextStatistics = Field(..., description="Text length and metric counts")
+    engine: str = Field("Local Heuristics Fallback", description="The parser engine used")

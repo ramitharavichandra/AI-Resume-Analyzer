@@ -15,6 +15,7 @@ function App() {
 
   const [parseData, setParseData] = useState<ParseResumeResponse | null>(null);
   const [matchData, setMatchData] = useState<ResumeMatchResponse | null>(null);
+  const [jobDescriptionText, setJobDescriptionText] = useState<string>('');
 
   const toggleTheme = () => {
     setIsDark((prev) => !prev);
@@ -24,6 +25,7 @@ function App() {
   const handleAnalyze = async (file: File, jobDescription: string) => {
     setIsLoading(true);
     setError(null);
+    setJobDescriptionText(jobDescription);
 
     try {
       // Step 1: Parse PDF File
@@ -41,9 +43,27 @@ function App() {
     }
   };
 
+  const handleReMatch = async (newJd: string) => {
+    if (!parseData) return;
+    setIsLoading(true);
+    setError(null);
+    setJobDescriptionText(newJd);
+
+    try {
+      const matched = await matchResume(parseData.raw_text, newJd);
+      setMatchData(matched);
+    } catch (err: any) {
+      console.error('Re-match error:', err);
+      setError(err.message || 'Failed to re-match resume.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleReset = () => {
     setParseData(null);
     setMatchData(null);
+    setJobDescriptionText('');
     setError(null);
   };
 
@@ -59,7 +79,15 @@ function App() {
           </>
         ) : (
           <div className="pt-24 pb-16">
-            <AnalyzerDashboard matchData={matchData} parseData={parseData} onReset={handleReset} />
+            <AnalyzerDashboard
+              matchData={matchData}
+              parseData={parseData}
+              jobDescription={jobDescriptionText}
+              onReMatch={handleReMatch}
+              onReset={handleReset}
+              isLoading={isLoading}
+              error={error}
+            />
           </div>
         )}
       </main>

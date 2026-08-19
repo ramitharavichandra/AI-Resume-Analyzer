@@ -20,3 +20,4 @@ class ResumeMatchResponse(BaseModel):
     present_sections: List[str] = Field(..., description="Detected structural sections")
     missing_sections: List[str] = Field(..., description="Missing structural sections")
     improvement_suggestions: List[str] = Field(..., description="Actionable improvement recommendations")
+    engine: str = Field("Local Heuristics Fallback", description="The scoring engine used")

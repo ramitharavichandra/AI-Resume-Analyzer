@@ -1,9 +1,14 @@
+import logging
 from fastapi import APIRouter, UploadFile, File, HTTPException, status
+from app.config import settings
 from app.services.pdf_parser import PDFParserService
 from app.services.docx_parser import DocxParserService
 from app.services.text_cleaner import TextCleanerService
 from app.services.section_extractor import SectionExtractorService
+from app.services.gemini_service import GeminiService
 from app.models.parser import ParseResumeResponse, ParsedSections, TextStatistics
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
@@ -40,7 +45,23 @@ async def parse_resume(file: UploadFile = File(...)):
     cleaned_text = TextCleanerService.clean_text(raw_text)
 
     # Step 3: Segment text into resume sections
-    segmented_dict = SectionExtractorService.segment_sections(cleaned_text)
+    engine_used = "Local Heuristics Fallback"
+    segmented_dict = None
+
+    if settings.GEMINI_API_KEY:
+        try:
+            logger.info("Attempting semantic parsing using Gemini API.")
+            segmented_dict = GeminiService.parse_resume_semantically(
+                cleaned_text, settings.GEMINI_API_KEY
+            )
+            engine_used = "Gemini AI Engine"
+        except Exception as e:
+            logger.warning(
+                f"Gemini parsing failed, falling back to local extractor. Error: {str(e)}"
+            )
+
+    if not segmented_dict:
+        segmented_dict = SectionExtractorService.segment_sections(cleaned_text)
 
     # Step 4: Calculate text statistics
     stats = TextCleanerService.get_text_statistics(cleaned_text)
@@ -51,5 +72,6 @@ async def parse_resume(file: UploadFile = File(...)):
         raw_text=cleaned_text,
         sections=ParsedSections(**segmented_dict),
         statistics=TextStatistics(**stats),
+        engine=engine_used,
     )
 

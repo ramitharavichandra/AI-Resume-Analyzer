@@ -70,7 +70,7 @@ AI-Resume-Analyzer/
 │   │   ├── services/           # PDF Parser, Skill Taxonomy, TF-IDF & ATS Engine
 │   │   ├── config.py           # Pydantic v2 Settings Manager
 │   │   └── main.py             # FastAPI App Entrypoint
-│   ├── tests/                  # Pytest Automated Test Suite (13 passing tests)
+│   ├── tests/                  # Pytest Automated Test Suite (26 passing tests)
 │   └── requirements.txt        # Python Dependencies
 ├── frontend/
 │   ├── src/

@@ -9,6 +9,7 @@ class DocxParserService:
     """
     Production-grade DOCX parsing service using standard python libraries.
     Handles file stream extraction, XML parsing, and metadata-based page count retrieval.
+    This service is integrated with the main resume parser to support Microsoft Word formats.
     """
 
     @staticmethod

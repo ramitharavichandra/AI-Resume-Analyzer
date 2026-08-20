@@ -5,6 +5,7 @@ from typing import Dict, Any
 class TextCleanerService:
     """
     Utility service for cleaning, normalizing, and auditing raw text extracted from resumes.
+    Normalizes multi-line spacing, bullet points, and tab characters for downstream text parsing.
     """
 
     # Common unicode bullet points found in resumes

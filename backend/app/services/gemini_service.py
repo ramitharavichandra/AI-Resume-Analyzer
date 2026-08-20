@@ -10,6 +10,7 @@ class GeminiService:
     """
     Service to interact with Google's Gemini API for semantic resume analysis.
     Uses Direct HTTP calls to avoid extra sdk dependencies and ensure high performance.
+    Requires GEMINI_API_KEY to be configured in environmental settings.
     """
 
     BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"

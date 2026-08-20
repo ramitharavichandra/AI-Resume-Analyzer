@@ -8,6 +8,7 @@ class PDFParserService:
     """
     Production-grade PDF parsing service using PyPDF.
     Handles file stream extraction, password checks, and corruption handling.
+    This service is integrated with the main resume segmentation pipeline.
     """
 
     @staticmethod

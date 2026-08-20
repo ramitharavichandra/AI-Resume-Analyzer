@@ -10,6 +10,7 @@ class ATSScorerService:
     Production Hybrid ATS Scoring Engine.
     Combines Skill Gap Match % (45%), Vector Cosine Similarity (35%),
     and Structural Section Completeness (20%).
+    Provides match ratings: "Needs Improvement", "Strong Match", or "Excellent".
     """
 
     @classmethod

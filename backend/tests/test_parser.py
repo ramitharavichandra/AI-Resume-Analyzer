@@ -1,4 +1,5 @@
 import io
+from unittest.mock import patch, MagicMock
 from fastapi.testclient import TestClient
 from pypdf import PdfWriter
 from app.main import app
@@ -138,5 +139,58 @@ def test_parse_resume_docx_encrypted():
     )
     assert response.status_code == 400
     assert "password-protected, encrypted, or in an older Word 97-2003 (.doc) format" in response.json()["detail"]
+
+
+def test_parse_resume_pdf_success():
+    mock_page = MagicMock()
+    mock_page.extract_text.return_value = "Summary\nSenior Python Developer.\nTechnical Skills\nPython FastAPI Docker PostgreSQL\nExperience\nSoftware Engineer at TechCorp."
+
+    with patch("app.services.pdf_parser.PdfReader") as MockPdfReader:
+        mock_reader = MockPdfReader.return_value
+        mock_reader.is_encrypted = False
+        mock_reader.pages = [mock_page]
+
+        response = client.post(
+            "/api/v1/parse-resume",
+            files={"file": ("resume.pdf", b"dummy pdf data", "application/pdf")},
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert data["filename"] == "resume.pdf"
+        assert data["page_count"] == 1
+        assert "Senior Python Developer" in data["raw_text"]
+        assert "FastAPI" in data["sections"]["skills"]
+
+
+def test_parse_resume_pdf_encrypted():
+    with patch("app.services.pdf_parser.PdfReader") as MockPdfReader:
+        mock_reader = MockPdfReader.return_value
+        mock_reader.is_encrypted = True
+        mock_reader.decrypt.side_effect = Exception("Decryption failed")
+
+        response = client.post(
+            "/api/v1/parse-resume",
+            files={"file": ("resume.pdf", b"dummy encrypted pdf data", "application/pdf")},
+        )
+        assert response.status_code == 400
+        assert "password-protected or encrypted" in response.json()["detail"]
+
+
+def test_parse_resume_pdf_empty_text():
+    mock_page = MagicMock()
+    mock_page.extract_text.return_value = "   "  # No content extracted
+
+    with patch("app.services.pdf_parser.PdfReader") as MockPdfReader:
+        mock_reader = MockPdfReader.return_value
+        mock_reader.is_encrypted = False
+        mock_reader.pages = [mock_page]
+
+        response = client.post(
+            "/api/v1/parse-resume",
+            files={"file": ("resume.pdf", b"dummy scanned pdf", "application/pdf")},
+        )
+        assert response.status_code == 400
+        assert "scanned images/OCR" in response.json()["detail"]
+
 
 

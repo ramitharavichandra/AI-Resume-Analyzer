@@ -1,6 +1,7 @@
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+It forms the frontend user interface for the AI Resume Analyzer, showcasing candidate resume upload, dynamic charts, match scores, and action items.
 
 Currently, two official plugins are available:
 

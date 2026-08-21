@@ -1,11 +1,21 @@
 import React, { useState, useRef } from 'react';
 
+/**
+ * Props for the ResumeUploader component.
+ */
 interface Props {
+  /** Callback function triggered upon submission of a valid file and job description text. */
   onAnalyze: (file: File, jobDescription: string) => void;
+  /** State indicator to disable forms and display loading indicators during backend processing. */
   isLoading: boolean;
+  /** Optional error message from the backend parsing or matching steps. */
   error?: string | null;
 }
 
+/**
+ * Interactive Drag-and-Drop file uploader component with text area input for Job Descriptions.
+ * Validates document types (.pdf or .docx) and triggers parent analytics hook.
+ */
 const ResumeUploader: React.FC<Props> = ({ onAnalyze, isLoading, error }) => {
   const [file, setFile] = useState<File | null>(null);
   const [jobDescription, setJobDescription] = useState<string>('');

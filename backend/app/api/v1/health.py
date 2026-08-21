@@ -5,7 +5,7 @@ router = APIRouter()
 
 
 @router.get("/health", summary="Health Check")
-async def health_check():
+async def health_check() -> dict[str, str]:
     """
     Returns API health status, app name, version, and environment.
     """

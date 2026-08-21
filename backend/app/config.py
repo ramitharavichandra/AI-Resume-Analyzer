@@ -15,6 +15,10 @@ class Settings(BaseSettings):
     # Optional Gemini API Key for semantic resume parsing/matching
     GEMINI_API_KEY: str | None = None
 
+    # Server connection settings
+    HOST: str = "0.0.0.0"
+    PORT: int = 8000
+
     model_config = SettingsConfigDict(env_file=".env", case_sensitive=True)
 
 

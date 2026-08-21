@@ -11,5 +11,7 @@ def test_health_check():
     assert data["status"] == "healthy"
     assert "app_name" in data
     assert "version" in data
+    assert "environment" in data
     assert isinstance(data["app_name"], str)
     assert isinstance(data["version"], str)
+    assert isinstance(data["environment"], str)

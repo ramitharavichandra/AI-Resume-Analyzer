@@ -48,6 +48,14 @@ export interface ResumeMatchResponse {
 
 // ── API Client ───────────────────────────────────────────────────────────────
 
+/**
+ * Helper to process backend fetch responses.
+ * Parses JSON success payloads or extracts error details (defaulting to a generic HTTP message).
+ * 
+ * @param res Fetch Response object
+ * @returns Parsed JSON body cast to type T
+ * @throws Error containing backend detail message or default HTTP status message
+ */
 async function handleResponse<T>(res: Response): Promise<T> {
   if (!res.ok) {
     const err = await res.json().catch(() => ({ detail: 'Unknown error' }));

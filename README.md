@@ -99,7 +99,7 @@ source venv/bin/activate
 # Install dependencies
 pip install -r requirements.txt
 
-# Run automated tests
+# Run automated tests (specify PYTHONPATH so pytest resolves the 'app' module)
 PYTHONPATH=. pytest
 
 # Start development server

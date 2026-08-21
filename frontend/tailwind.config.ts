@@ -9,6 +9,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // Custom branding color palette (Indigo variations)
         brand: {
           50:  '#eef2ff',
           100: '#e0e7ff',
@@ -22,6 +23,7 @@ const config: Config = {
           900: '#312e81',
           950: '#1e1b4b',
         },
+        // Slate-based color palette for dark-mode layout backgrounds and cards
         surface: {
           50:  '#f8fafc',
           100: '#f1f5f9',

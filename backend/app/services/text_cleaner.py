@@ -39,8 +39,9 @@ class TextCleanerService:
 
     @staticmethod
     def get_text_statistics(text: str) -> Dict[str, Any]:
-        """
+        r"""
         Returns metric analysis of the text (word count, line count, character count).
+        Word count is computed by matching alphanumeric sequences using the '\b\w+\b' pattern.
         """
         lines = text.split("\n") if text else []
         words = re.findall(r"\b\w+\b", text) if text else []

@@ -1,3 +1,8 @@
+"""
+FastAPI application entrypoint for the AI Resume Analyzer backend.
+Configures CORS middleware and registers sub-routers for health, parsing, skills, and scoring.
+"""
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings

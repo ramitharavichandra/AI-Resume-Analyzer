@@ -18,7 +18,12 @@ class PDFParserService:
 
         :param file_bytes: Raw binary bytes of uploaded PDF file.
         :return: Tuple containing (extracted_text, page_count)
-        :raises HTTPException: 400 Bad Request if PDF is invalid, empty, or encrypted.
+        :raises HTTPException: 400 Bad Request with details if:
+            - The uploaded file is empty.
+            - The PDF file is password-protected or encrypted.
+            - The PDF file contains 0 pages.
+            - The PDF contains only scanned images (no selectable text).
+            - The file stream is corrupt or invalid.
         """
         if not file_bytes or len(file_bytes) == 0:
             raise HTTPException(
